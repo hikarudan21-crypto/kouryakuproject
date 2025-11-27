@@ -1,0 +1,59 @@
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+            <!-- Featured blog post-->
+            <!-- Nested row for non-featured blog posts-->
+            <div class="row">
+                {% for record in object_list %}
+                <div class="col-md-4 mb-4"> <!-- 3列並び、幅が足りなければ改行 -->
+                    <div class="card h-100">
+                    <img src="{{ record.image1.url|default:'https://dummyimage.com/700x350/dee2e6/6c757d.jpg' }}" 
+                        class="card-img-top" alt="{{ record.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ record.title }}</h5>
+                        <p class="card-text">{{ record.comment }}</p>
+                        <a href="{% url 'kouryaku:kouryaku_detail' record.pk %}" class="btn btn-primary">続きを読む →</a>
+                    </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Pagination-->
+        </div>
+        <!-- Side widgets-->
+        <!-- サイドバー -->
+        <div class="col-lg-4">
+            <!-- Search widget-->
+            <div class="card mb-4">
+                <form method="get" action="{% url 'kouryaku:search' %}">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="q" placeholder="検索ワードを入力..." />
+                        <button class="btn btn-primary" type="submit">検索</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Categories widget-->
+            <div class="card mb-4">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for cat in all_categories %}
+                            <li><a href="{% url 'kouryaku:kouryaku_cat' cat.id %}">{{ cat.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Side widget-->
+            <div class="card mb-4">
+                <div class="card-header">Side Widget</div>
+                <div class="card-body">
+                    ここに自由にテキストやリンクを入れられます。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

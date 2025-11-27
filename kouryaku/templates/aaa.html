@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}kouryaku Detail{% endblock %}
+{% block contents %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col offset-3">
+            <h2>{{ object.title }}</h2>
+            <p>{{ object.comment }}</p>
+            <br>
+            <p>{{ object.posted_at }} に投稿</p>
+            <p><img src="{{ object.image1.url }}"></p>
+            {% if object.image2 %}
+                <p><img src="{{ object.image2.url }}"></p>
+            {% endif %}
+            {% if object.url %}
+                <p>関連リンク: <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p>
+            {% endif %}
+
+            <h3>コメント一覧</h3>
+            {% for comment in comments %}
+                <p><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+            {% empty %}
+                <p>コメントはまだありません。</p>
+            {% endfor %}
+            <form method="POST">
+                {% csrf_token %}
+                <h4>コメントを投稿</h4>
+
+                <div class="form-group">
+                    <label for="{{ form.text.id_for_label }}">コメント内容</label>
+                    {{ form.text }}
+                </div>
+
+                <button type="submit" class="btn btn-success mt-2">送信</button>
+            </form>
+
+
+            {% if request.user == object.user %}
+            <form method="POST">
+                <a href="{% url 'kouryaku:kouryaku_delete' object.pk %}" class="btn btn-primary my-2">削除する</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

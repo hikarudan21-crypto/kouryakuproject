@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}マイページ{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2>マイページ</h2>
+    <p>ようこそ、{{ user.username }} さん！</p>
+
+    <h3>プロフィール情報</h3>
+    <ul>
+        <li>ユーザー名: {{ user.username }}</li>
+        <li>メールアドレス: {{ user.email }}</li>
+        <li>登録日: {{ user.date_joined|date:"Y年m月d日" }}</li>
+    </ul>
+
+        <h3>あなたの投稿一覧</h3>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'kouryaku:post_detail' post.id %}">{{ post.title }}</a>
+                <span class="text-muted">（{{ post.posted_at|date:"Y年m月d日 H:i" }}）</span>
+            </li>
+        {% empty %}
+            <li>まだ投稿はありません。</li>
+        {% endfor %}
+    </ul>
+
+    <!-- ページネーション -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if posts.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">前へ</a>
+                </li>
+            {% endif %}
+
+            {% for num in posts.paginator.page_range %}
+                {% if posts.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.next_page_number }}">次へ</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

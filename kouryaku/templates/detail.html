@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}kouryaku Detail{% endblock %}
+{% block contents %}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- メインコンテンツ -->
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h1 class="fw-bolder mb-1">{{ object.title }}</h1>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2">{{ object.posted_at }} に投稿</div>
+                    <!-- Post categories-->
+                    {% for cat in object.categories.all %}
+                        <a class="badge bg-secondary text-decoration-none link-light"
+                           href="{% url 'kouryaku:kouryaku_cat' cat.id %}">
+                            {{ cat.title }}
+                        </a>
+                    {% endfor %}
+                </header>
+                <!-- Preview image figure-->
+                <figure class="mb-4">
+                    <img class="img-fluid rounded" src="{{ object.image1.url }}"
+                         alt="https://dummyimage.com/900x400/ced4da/6c757d.jpg" />
+                </figure>
+                <!-- Post content-->
+                <section class="mb-5">
+                    <p class="fs-5 mb-4">{{ object.comment }}</p>
+                </section>
+            </article>
+
+            <!-- コメントフォーム -->
+            <section class="mb-5">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">コメントする</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- コメント一覧 -->
+            <section class="mb-5">
+                <h3>コメント一覧</h3>
+                {% for comment in comments %}
+                    <div class="d-flex mb-4">
+                        <div class="flex-shrink-0">
+                            <img class="rounded-circle"
+                                 src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">{{ comment.user.username }}</div>
+                            {{ comment.text }}
+                            <div class="text-muted fst-italic">{{ comment.created_at }}</div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>まだコメントはありません。</p>
+                {% endfor %}
+            </section>
+        </div>
+        <div class="col-lg-4">
+            <!-- Search widget-->
+            <div class="card mb-4">
+                <form method="get" action="{% url 'kouryaku:search' %}">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="q" placeholder="検索ワードを入力..." />
+                        <button class="btn btn-primary" type="submit">検索</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Categories widget-->
+            <div class="card mb-4">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for cat in all_categories %}
+                            <li><a href="{% url 'kouryaku:kouryaku_cat' cat.id %}">{{ cat.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Side widget-->
+            <div class="card mb-4">
+                <div class="card-header">Side Widget</div>
+                <div class="card-body">
+                    ここに自由にテキストやリンクを入れられます。
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
